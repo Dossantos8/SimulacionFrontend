@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+
+:root {
+  --font-serif: 'Merriweather', serif;
+  --font-sans: 'Open Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+body {
+  background-color: #F1F1F1;
+  color: #000000;
+  font-family: var(--font-sans);
+  margin: 0;
+  overflow-x: clip;
+}
+
+/* Clases de utilidad personalizadas del documento original */
+.paper-surface {
+  background-color: #FFFFFF;
+  background-image: radial-gradient(#00000005 1px, transparent 1px);
+  background-size: 40px 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.latex-table {
+  border-top: 2px solid #000000;
+  border-bottom: 2px solid #000000;
+}
+
+.latex-table th {
+  border-bottom: 1px solid #000000;
+  padding: 12px 8px;
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 800;
+}
+
+.latex-table td {
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.stamp-box {
+  border: 1px solid #000000;
+  background-color: #F8FAFC;
+  transition: all 0.3s ease;
+}
+
+.stamp-box:hover {
+  background-color: #E2E8F0;
+}
+
+.underlined-input {
+  border: none;
+  border-bottom: 1px solid #000000;
+  background: transparent;
+  width: 100%;
+  padding: 4px 8px 4px 0;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.underlined-input:focus {
+  outline: none;
+  border-bottom-width: 2px;
+}
+
+select.underlined-input {
+  padding-right: 24px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
