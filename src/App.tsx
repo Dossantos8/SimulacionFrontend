@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import type { MouseEvent } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -11,40 +12,22 @@ import {
   Tooltip
 } from 'chart.js';
 import type { ChartData } from 'chart.js'
-import { Header } from './Componentes/Header';
-import { AbstractParams } from './Componentes/Parametros';
-import { GraficosResultados } from './Componentes/GraficosResultados';
-import { TablaLedger } from './Componentes/TablaLedger';
-import type { FilaTabla } from './Types/Simulacion';
-import { Conclusion } from './Componentes/Conclusion';
-import type { MouseEvent } from 'react';
+
+import { Header } from './components/Header';
+import { AbstractParams } from './components/Parametros';
+import { GraficosResultados } from './components/GraficosResultados';
+import { SectionPruebas } from './components/Pruebas';
+import { TablaLedger } from './components/TablaLedger';
+import { Conclusion } from './components/Conclusion';
+import type { FilaDatos } from './types/Simulacion';
+
+import { generarLCG, generarMediosCuadrados } from './utils/generadores';
 
 // Registrar plugins de GSAP y componentes de Chart.js
 gsap.registerPlugin(ScrollTrigger);
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Tooltip);
 
-const generarLCG = (semilla: number, a: number, m: number, n: number) => {
-  const raws: number[] = []; const norms: number[] = []; let x = semilla;
-  for (let i = 0; i < n; i++) { x = (a * x) % m; raws.push(x); norms.push(x / m); }
-  return { raws, norms };
-};
 
-// 2. GENERADOR MEDIOS CUADRADOS
-const generarMediosCuadrados = (semilla: number, n: number) => {
-  const raws: number[] = []; const norms: number[] = []; 
-  let x = semilla;
-
-  for (let i = 0; i < n; i++) {
-    const cuadrado = x * x;
-    const cadenaCuadrado = String(cuadrado).padStart(8, '0');
-    const centro = cadenaCuadrado.substring(2, 6);
-    
-    x = parseInt(centro, 10) || 0; 
-    raws.push(x); 
-    norms.push(x / 10000); 
-  }
-  return { raws, norms };
-};
 export default function App(): React.JSX.Element {
 
   // Tipado correcto para las referencias de animaciones GSAP
@@ -60,7 +43,7 @@ export default function App(): React.JSX.Element {
   const [sampleSize, setSampleSize] = useState<string>('1000');
 
   // Estados de datos procesados 
-  const [tablaDatos, setTablaDatos] = useState<FilaTabla[]>([]);
+  const [tablaDatos, setTablaDatos] = useState<FilaDatos[]>([]);
   const [histogramData, setHistogramData] = useState<ChartData<'bar'>>({ labels: [], datasets: [] });
   const [lineData, setLineData] = useState<ChartData<'line'>>({ labels: [], datasets: [] });
 
@@ -125,7 +108,7 @@ export default function App(): React.JSX.Element {
     });
 
     // 4. Actualizar estado de la Tabla Ledger
-    const nuevasFilas: FilaTabla[] = resultados.raws.map((raw, index) => ({
+    const nuevasFilas: FilaDatos[] = resultados.raws.map((raw, index) => ({
       id: String(index + 1).padStart(4, '0'),
       raw: String(raw),
       norm: resultados.norms[index].toFixed(6),
@@ -133,11 +116,6 @@ export default function App(): React.JSX.Element {
     }));
     setTablaDatos(nuevasFilas);
   };
-
-  // Ejecutar automáticamente cuando cambie el método o la semilla inicializada
-  useEffect(() => { 
-    ejecutarProtocolo(); 
-  }, [metodo, seed]);
 
   // Ciclo de vida y animaciones usando gsap.context() para evitar memory leaks
   useEffect(() => {
@@ -185,10 +163,10 @@ export default function App(): React.JSX.Element {
   }, []);
 
   return (
-    <div className="min-h-screen py-16 px-4 md:px-0">
+    <div className="min-h-screen sm:p-4">
       <div
         ref={mainDocRef}
-        className="max-w-[1000px] mx-auto paper-surface p-12 md:p-20 relative overflow-hidden"
+        className="max-w-[1200px] mx-auto paper-surface p-8 sm:p-12 md:p-16 relative overflow-hidden"
         id="main-document"
       >
         {/* Identificador Lateral Flotante */}
@@ -211,10 +189,13 @@ export default function App(): React.JSX.Element {
           {/* Sección II: Gráficos Reactivos */}
           <GraficosResultados datosHistograma={histogramData} datosLineas={lineData} />
 
-          {/* Sección III: Tabla Ledger Dinámica */}
+          {/* III: Pruebas */}
+          <SectionPruebas />
+
+          {/* Sección IV: Tabla Ledger Dinámica */}
           <TablaLedger mocktabla={tablaDatos} verTodasFilas={false} setVerTodasFilas={() => {}} />
 
-          {/* Sección IV: Conclusión & Firmas de Autorización */}
+          {/* Sección V: Conclusión & Firmas de Autorización */}
           <Conclusion totalMuestras={parseInt(sampleSize)} />
         </main>
 
@@ -231,4 +212,3 @@ export default function App(): React.JSX.Element {
     </div>
   );
 }
-

@@ -22,7 +22,7 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
     <section
             className="animate-section grid grid-cols-1 md:grid-cols-12 gap-12"
             id="doc-abstract-params">
-            <div className="md:col-span-4 space-y-4">
+            <div className="md:col-span-5 space-y-4">
               <h3 className="font-serif italic font-black text-xl border-b border-black pb-1">Resumen / Abstract</h3>
               <p className="font-serif text-sm leading-relaxed text-slate-800 text-justify">
                 Esta herramienta evalua la consistencia empirica de modelos de generación de números pseudo-aleatorios. Mediante el uso de los métodos congruencial multiplicativo y medio cuadrado, se busca medir la entropía y distribución de las secuencias generadas. Los reportes aquí mostrados funcionan como una validación de la metodología computacional del <i className="italic font-bold">Laboratorio Estadístico</i> y su correspondencia con los estándares de equidistribución asintótica.
@@ -30,8 +30,8 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
             </div>
             
             {/* Formulario */}
-            <div className="md:col-span-8">
-              <div className="bg-slate-50 border border-slate-200 p-8">
+            <div className="md:col-span-7">
+              <div className=" shadow-md border border-slate-200 p-8">
 
                 {/* Titulo */}
                 <h4 className="font-sans text-sm uppercase font-black tracking-[0.2em] border-b border-slate-300 pb-2 mb-8">
@@ -80,9 +80,33 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
 
                   {/* Boton */}
                   <div className='flex items-center justify-end'>
-                      <button onClick={onEjecutar} className="p-2 border-2 border-slate-500 border-dashed font-bold uppercase text-xs text-slate-500 tracking-[0.2em] transition-transform hover:-translate-y-5 hover:-rotate-10 hover:scale-120 hover:border-emerald-700 hover:text-emerald-700 cursor-pointer">
-                        <span>Ejecutar</span>
-                      </button>
+                      <button
+                      onClick={onEjecutar}
+                      className="
+                        relative p-3 font-bold uppercase text-xs tracking-[0.2em]
+                        
+                        border-2 border-slate-400 border-dashed text-slate-400 
+                        
+                        transition-all duration-50 ease-out transform origin-center
+                        
+                        pointer-events-auto
+                        
+                        sm:hover:not-active:-translate-y-1
+                        sm:hover:not-active:rotate-[-5deg] sm:hover:not-active:scale-130 sm:hover:not-active:border-slate-500sm:hover:not-active:text-slate-500
+                        sm:hover:not-active:shadow-lg
+
+                        active:scale-110
+                        active:-rotate-5
+                        active:translate-y-1 
+                        active:border-emerald-600 
+                        active:text-emerald-600 
+                        active:bg-emerald-50/50
+                        
+                        cursor-pointer select-none outline-none
+                      "
+                    >
+                      <span className="relative z-10">Generar</span>
+                    </button>
                   </div>
                 </div>
               </div>

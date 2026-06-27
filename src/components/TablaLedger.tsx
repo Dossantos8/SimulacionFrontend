@@ -1,8 +1,8 @@
 import React from 'react';
-import type { FilaTabla } from '../Types/Simulacion';
+import type { FilaDatos } from '../types/Simulacion';
 
 interface TablaLedgerProps {
-    mocktabla: FilaTabla[];
+    mocktabla: FilaDatos[];
     verTodasFilas: boolean;
     setVerTodasFilas: (val: boolean) => void;
 }
@@ -11,7 +11,7 @@ export const TablaLedger: React.FC<TablaLedgerProps> = ({ mocktabla, verTodasFil
   const filasAMostrar = verTodasFilas ? mocktabla : mocktabla.slice(0, 8);
     return (
         <section className="animate-section space-y-6" id="doc-data-table">
-            <h3 className="font-serif italic font-black text-xl">III. Tabla de Observación Empírica</h3>
+            <h3 className="font-serif italic font-black text-xl">IV. Tabla de Observación Empírica</h3>
 
             <div className="overflow-x-auto">
               <table className="w-full latex-table">
