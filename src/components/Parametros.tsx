@@ -12,11 +12,13 @@ interface ParametrosProps {
   setModulo: (val: string) => void;
   sampleSize: string;
   setSampleSize: (val: string) => void;
+  digitos: string;
+  setDigitos: (val: string) => void;
   onEjecutar: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const AbstractParams: React.FC<ParametrosProps> = ({
-  metodo, setMetodo, seed, setSeed, multiplier, setMultiplier, modulo, setModulo, sampleSize, setSampleSize, onEjecutar
+  metodo, setMetodo, seed, setSeed, multiplier, setMultiplier, modulo, setModulo, sampleSize, setSampleSize, digitos, setDigitos, onEjecutar
 }) => {
   return (
     <section
@@ -61,21 +63,33 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
                       <input type="text" value={seed} onChange={(e) => setSeed(e.target.value)} className="underlined-input" />
                     </div>
 
-                    <div>
-                      <label className="block font-sans text-xs uppercase font-bold text-slate-500 mb-2">Multiplicador (a)</label>
-                      <input type="text" value={multiplier} onChange={(e) => setMultiplier(e.target.value)} className="underlined-input" />
-                    </div>
+                    {metodo === 'Congruencial Multiplicativo' && (
+                    <>
+                      <div>
+                        <label className="block font-sans text-xs uppercase font-bold text-slate-500 mb-2">Multiplicador (a)</label>
+                        <input type="text" value={multiplier} onChange={(e) => setMultiplier(e.target.value)} className="underlined-input" />
+                      </div>
 
-                    <div>
-                      <label className="block font-sans text-xs uppercase font-bold text-slate-500 mb-2">Modulo(m)</label>
-                      <input type="text" value={modulo} onChange={(e) => setModulo(e.target.value)} className="underlined-input" />
-                    </div>
+                      <div>
+                        <label className="block font-sans text-xs uppercase font-bold text-slate-500 mb-2">Modulo(m)</label>
+                        <input type="text" value={modulo} onChange={(e) => setModulo(e.target.value)} className="underlined-input" />
+                      </div>
+                    </>
+                    )}
+                  
+
+                    {metodo === 'Medios Cuadrados' && (
+                      <div>
+                        <label className="block font-sans text-xs uppercase font-bold text-slate-500 mb-2">Número de dígitos (d)</label>
+                        <input type="text" value={digitos} onChange={(e) => setDigitos(e.target.value)} className="underlined-input" />
+                      </div>
+
+                    )}
 
                     <div>
                       <label className="block font-sans text-xs uppercase font-bold text-slate-500 mb-2">Tamaño de la muestra (n)</label>
                       <input type="text" value={sampleSize} onChange={(e) => setSampleSize(e.target.value)} className="underlined-input w-24" />
                     </div>
-
                   </div>
 
                   {/* Boton */}
@@ -112,5 +126,6 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
               </div>
             </div>
           </section>
-    );
-};
+  );
+}
+  

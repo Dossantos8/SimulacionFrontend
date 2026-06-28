@@ -1,6 +1,5 @@
-import type { FilaPrueba } from "../types/Simulacion";
+import type { FilaPrueba } from "../Types/Simulacion";
 import { PruebaCard } from "./PruebaCard";
-
 
 const mockTabla2: FilaPrueba[] = [
   {
@@ -33,10 +32,10 @@ export function SectionPruebas() {
     <section className='space-y-6'>
       <h3 className="border-b-2 pb-6 font-serif italic font-black text-xl">III. Análisis de Resultados (Pruebas)</h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-        <PruebaCard estado="Aprobada" nombre="K-Smirnov" variable="D" valor={0.0241} />
-        <PruebaCard estado="Aprobada" nombre="Rachas" variable="Z" valor={1.1205} />
-        <PruebaCard estado="Aprobada" nombre="Media" variable="Z" valor={2.4501} />
-        <PruebaCard estado="Aprobada" nombre="Varianza" variable="ChiÑo" valor={98.4} />
+        <PruebaCard estado="Aprobada" nombre="K-Smirnov" FilaDatos={[{ label: "D⁺", valor: 0.036127 }, { label: "D⁻", valor: 0.036804 }]} />
+        <PruebaCard estado="Aprobada" nombre="Media" FilaDatos={[{ label: "Lim. Inf", valor: 0.443420 }, { label: "Lim. Sup", valor: 1.536580 }]} />
+        <PruebaCard estado="Aprobada" nombre="Varianza" FilaDatos={[{ label: "Lim. Inf", valor: 0.443420 },{ label: "Lim. Sup", valor: 1.536580 }]} />
+        <PruebaCard estado="Aprobada" nombre="Rachas" FilaDatos={[{ label: "μ", valor: 250.5 },{ label: "σ²", valor: 12.3}, { label: "c₀", valor: 240}]} />
       </div>
 
       <div className='overflow-x-auto'>

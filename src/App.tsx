@@ -19,7 +19,7 @@ import { GraficosResultados } from './components/GraficosResultados';
 import { SectionPruebas } from './components/Pruebas';
 import { TablaLedger } from './components/TablaLedger';
 import { Conclusion } from './components/Conclusion';
-import type { FilaDatos } from './types/Simulacion';
+import type { FilaDatos } from './Types/Simulacion';
 
 import { generarLCG, generarMediosCuadrados } from './utils/generadores';
 
@@ -41,6 +41,7 @@ export default function App(): React.JSX.Element {
   const [multiplier, setMultiplier] = useState<string>('48271');
   const [modulo, setModulo] = useState<string>('2147483647');
   const [sampleSize, setSampleSize] = useState<string>('1000');
+  const [digitos, setDigitos] = useState<string>('4');
 
   // Estados de datos procesados 
   const [tablaDatos, setTablaDatos] = useState<FilaDatos[]>([]);
@@ -183,7 +184,8 @@ export default function App(): React.JSX.Element {
           <AbstractParams
             metodo={metodo} setMetodo={setMetodo} seed={seed} setSeed={setSeed}
             multiplier={multiplier} setMultiplier={setMultiplier} modulo={modulo} setModulo={setModulo}
-            sampleSize={sampleSize} setSampleSize={setSampleSize} onEjecutar={ejecutarProtocolo}
+            sampleSize={sampleSize} setSampleSize={setSampleSize} digitos={digitos} setDigitos={setDigitos}
+            onEjecutar={ejecutarProtocolo}
           />
 
           {/* Sección II: Gráficos Reactivos */}
