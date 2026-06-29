@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconAward, IconSignature } from '@tabler/icons-react';
+import { IconAward} from '@tabler/icons-react';
 
 interface ConclusionProps {
     totalMuestras: number;

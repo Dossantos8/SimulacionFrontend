@@ -37,6 +37,7 @@ export default function App(): React.JSX.Element {
 
   // Estados para los parámetros de generación
   const [metodo, setMetodo] = useState<string>('Congruencial Multiplicativo');
+  const [distribucion, setDistribucion] = useState<string>('Uniforme');
   const [seed, setSeed] = useState<string>('16807');
   const [multiplier, setMultiplier] = useState<string>('48271');
   const [modulo, setModulo] = useState<string>('2147483647');
@@ -183,6 +184,7 @@ export default function App(): React.JSX.Element {
          {/* 2. Abstract e Inputs */}
           <AbstractParams
             metodo={metodo} setMetodo={setMetodo} seed={seed} setSeed={setSeed}
+            distribucion={distribucion} setDistribucion={setDistribucion}
             multiplier={multiplier} setMultiplier={setMultiplier} modulo={modulo} setModulo={setModulo}
             sampleSize={sampleSize} setSampleSize={setSampleSize} digitos={digitos} setDigitos={setDigitos}
             onEjecutar={ejecutarProtocolo}

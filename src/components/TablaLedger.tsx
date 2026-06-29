@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FilaDatos } from '../types/Simulacion';
+import type { FilaDatos } from '../Types/Simulacion';
 
 interface TablaLedgerProps {
     mocktabla: FilaDatos[];

@@ -9,5 +9,4 @@ export interface FilaPrueba {
   metodo: string;
   ec: number;
   vc: number;
-  estado: string;
 }
