@@ -48,6 +48,7 @@ export default function App(): React.JSX.Element {
   const [tablaDatos, setTablaDatos] = useState<FilaDatos[]>([]);
   const [histogramData, setHistogramData] = useState<ChartData<'bar'>>({ labels: [], datasets: [] });
   const [lineData, setLineData] = useState<ChartData<'line'>>({ labels: [], datasets: [] });
+  const [simulacionGenerada, setSimulacionGenerada] = useState<boolean>(false);
 
   useEffect(() => {
     if (metodo === 'Medios Cuadrados') {
@@ -117,6 +118,7 @@ export default function App(): React.JSX.Element {
       entropia: (0.95 + Math.random() * 0.04).toFixed(4) // Simulación de entropía original
     }));
     setTablaDatos(nuevasFilas);
+    setSimulacionGenerada(true);
   };
 
   // Ciclo de vida y animaciones usando gsap.context() para evitar memory leaks
@@ -181,7 +183,7 @@ export default function App(): React.JSX.Element {
 
         <main className="space-y-20">
 
-         {/* 2. Abstract e Inputs */}
+          {/* 2. Abstract e Inputs */}
           <AbstractParams
             metodo={metodo} setMetodo={setMetodo} seed={seed} setSeed={setSeed}
             distribucion={distribucion} setDistribucion={setDistribucion}
@@ -190,17 +192,21 @@ export default function App(): React.JSX.Element {
             onEjecutar={ejecutarProtocolo}
           />
 
-          {/* Sección II: Gráficos Reactivos */}
-          <GraficosResultados datosHistograma={histogramData} datosLineas={lineData} />
+          {simulacionGenerada && (
+            <>
+              {/* Sección II: Gráficos Reactivos */}
+              <GraficosResultados datosHistograma={histogramData} datosLineas={lineData} />
 
-          {/* III: Pruebas */}
-          <SectionPruebas />
+              {/* III: Pruebas */}
+              <SectionPruebas />
 
-          {/* Sección IV: Tabla Ledger Dinámica */}
-          <TablaLedger mocktabla={tablaDatos} verTodasFilas={false} setVerTodasFilas={() => {}} />
+              {/* Sección IV: Tabla Ledger Dinámica */}
+              <TablaLedger mocktabla={tablaDatos} verTodasFilas={false} setVerTodasFilas={() => {}} />
 
-          {/* Sección V: Conclusión & Firmas de Autorización */}
-          <Conclusion totalMuestras={parseInt(sampleSize)} />
+              {/* Sección V: Conclusión & Firmas de Autorización */}
+              <Conclusion totalMuestras={parseInt(sampleSize)} />
+            </>
+          )}
         </main>
 
         {/* Footer */}
