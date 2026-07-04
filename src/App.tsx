@@ -209,6 +209,33 @@ export default function App(): React.JSX.Element {
   }, []);
 
   const simulacionGenerada = resultados !== null && !loading;
+  
+  const descargarPDF = () => {
+    window.print();
+  };
+
+  const descargarCSV = () => {
+    if (tablaDatos.length === 0) return;
+
+    let csvContent = "sep=;\n";
+    
+    csvContent += "Indice;Salida Cruda (Xi);Valor Normalizado (Ri)\n";
+
+    tablaDatos.forEach(row => {
+      csvContent += `${row.id};${row.raw};${row.norm}\n`;
+    });
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `Simulacion_${metodo.replace(/\s+/g, '_')}_n${sampleSize}.csv`);
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="min-h-screen sm:p-4">
@@ -257,8 +284,23 @@ export default function App(): React.JSX.Element {
         {/* Footer */}
         <footer className="mt-24 pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex gap-4">
-            <button className="font-sans text-[10px] uppercase font-black hover:text-slate-500 transition-colors cursor-pointer">Descargar PDF</button>
-            <button className="font-sans text-[10px] uppercase font-black hover:text-slate-500 transition-colors cursor-pointer">Exportar datos crudos (.CSV)</button>
+            {simulacionGenerada && (
+              <>
+                <button 
+                  onClick={descargarPDF} 
+                  className="font-sans text-[10px] uppercase font-black hover:text-slate-500 transition-colors cursor-pointer"
+                >
+                  Descargar PDF
+                </button>
+                <button 
+                  onClick={descargarCSV} 
+                  className="font-sans text-[10px] uppercase font-black hover:text-slate-500 transition-colors cursor-pointer"
+                >
+                  Exportar datos crudos (.CSV)
+                </button>
+              </>
+            )}
+
           </div>
           <p className="font-sans text-[10px] uppercase font-black opacity-30 text-center">© 2026 Laboratorio de Simulación Estocástica | All Rights Reserved</p>
         </footer>

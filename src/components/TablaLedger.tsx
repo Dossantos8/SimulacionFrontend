@@ -31,7 +31,6 @@ export const TablaLedger: React.FC<TablaLedgerProps> = ({ tabla}) => {
                     <th className="w-1/4 text-left">Indice (i)</th>
                     <th className="w-1/4 text-left">Salida cruda (Xi)</th>
                     <th className="w-1/4 text-left">Valor Normalizado (Ri)</th>
-                    <th className="w-1/4 text-left">Estado</th>
                   </tr>
                 </thead>
                 <tbody className="text-slate-900">
@@ -40,7 +39,6 @@ export const TablaLedger: React.FC<TablaLedgerProps> = ({ tabla}) => {
                       <td>{row.id}</td>
                       <td>{row.raw}</td>
                       <td>{row.norm}</td>
-                      <td className="font-bold">[VERIFICADO]</td>
                     </tr>
                   ))}
                 </tbody>

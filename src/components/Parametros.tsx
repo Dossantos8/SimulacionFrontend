@@ -48,8 +48,8 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
           Resumen / Abstract
         </h3>
         <p className="font-serif text-sm leading-relaxed text-slate-800 text-justify">
-          Esta herramienta evalua la consistencia empirica de modelos de generación de números pseudo-aleatorios. Mediante el uso de los métodos congruencial multiplicativo y medio cuadrado, se busca medir la entropía y distribución de las secuencias generadas. Los reportes aquí mostrados funcionan como una validación de la metodología computacional del <i className="italic font-bold">Laboratorio Estadístico</i> y su correspondencia con los estándares de equidistribución asintótica.
-        </p>
+          Esta herramienta evalúa la consistencia empírica y la validez estadística de modelos de generación de números pseudo-aleatorios. Mediante el uso de los métodos congruencial multiplicativo y de los cuadrados medios, se busca analizar el comportamiento y la distribución de las secuencias generadas, sometiéndolas a pruebas de hipótesis estadística, bondad de ajuste e independencia. Los reportes aquí mostrados funcionan como una validación de la metodología computacional del <i className="italic font-bold">Laboratorio Estadístico</i> y su correspondencia con los estándares de equidistribución asintótica.
+          </p>
       </div>
 
       {/* Formulario */}
@@ -121,16 +121,39 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
           </div>
 
           {/* Boton */}
-          <div className="flex items-center justify-end mt-8">
+          <div className="flex flex-wrap items-center justify-end mt-8 gap-8">
+            {loading && ( 
+            <div className="flex-shrink-0 flex items-center gap-2 font-serif italic text-xs text-slate-500 tracking-wide animate-pulse">
+                <span>[ Procesando Datos</span>
+                <span className="inline-block w-2 text-center">...</span>
+                <span>]</span>
+              </div>
+            )}
+
             <button
               onClick={onEjecutar}
               disabled={loading}
-              className={`relative p-3 font-bold uppercase text-xs tracking-[0.2em] border-2 border-slate-400 border-dashed text-slate-400 transition-all duration-50 ease-out transform origin-center pointer-events-auto ${loading ? 'cursor-not-allowed' : 'sm:hover:not-active:-translate-y-1 sm:hover:not-active:rotate-[-5deg] sm:hover:not-active:scale-130 sm:hover:not-active:border-slate-500 sm:hover:not-active:text-slate-500 sm:hover:not-active:shadow-lg active:scale-110 active:-rotate-5 active:translate-y-1 active:border-emerald-600 active:text-emerald-600 active:bg-emerald-50/50 cursor-pointer select-none outline-none'}`}
-            >
-              <span className="relative z-10 ">{loading ? 'Generando...' : 'Generar'}</span>
-            </button>
+              className={`
+                relative p-3 font-bold uppercase text-xs tracking-[0.2em]
+                border-2 border-slate-400 border-dashed text-slate-400 
+                transition-all duration-50 ease-out transform origin-center
+                disabled:disabled:cursor-not-allowed 
+                pointer-events-auto
+                sm:hover:not-active:-translate-y-1
+                sm:hover:not-active:rotate-[-5deg] sm:hover:not-active:scale-130 sm:hover:not-active:border-slate-500 sm:hover:not-active:text-slate-500
+                sm:hover:not-active:shadow-lg
+                active:scale-110
+                active:-rotate-5
+                active:translate-y-1 
+                active:border-emerald-600 
+                active:text-emerald-600 
+                active:bg-emerald-50/50
+                cursor-pointer select-none outline-none
+                ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                  <span className="relative z-10">Generar</span>
+             </button>
           </div>
-        </div>
+       </div>
       </div>
     </section>
   );
