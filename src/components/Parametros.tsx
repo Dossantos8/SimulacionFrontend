@@ -123,38 +123,40 @@ export const AbstractParams: React.FC<ParametrosProps> = ({
           {/* Boton */}
           <div className="flex flex-wrap items-center justify-end mt-8 gap-8">
             {loading && ( 
-            <div className="flex-shrink-0 flex items-center gap-2 font-serif italic text-xs text-slate-500 tracking-wide animate-pulse">
-                <span>[ Procesando Datos</span>
-                <span className="inline-block w-2 text-center">...</span>
-                <span>]</span>
-              </div>
-            )}
+            <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/70 backdrop-blur-sm">
+              <svg className="animate-spin h-12 w-12 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+          )}
 
-            <button
-              onClick={onEjecutar}
-              disabled={loading}
-              className={`
-                relative p-3 font-bold uppercase text-xs tracking-[0.2em]
-                border-2 border-slate-400 border-dashed text-slate-400 
-                transition-all duration-50 ease-out transform origin-center
-                disabled:disabled:cursor-not-allowed 
-                pointer-events-auto
-                sm:hover:not-active:-translate-y-1
-                sm:hover:not-active:rotate-[-5deg] sm:hover:not-active:scale-130 sm:hover:not-active:border-slate-500 sm:hover:not-active:text-slate-500
-                sm:hover:not-active:shadow-lg
-                active:scale-110
-                active:-rotate-5
-                active:translate-y-1 
-                active:border-emerald-600 
-                active:text-emerald-600 
-                active:bg-emerald-50/50
-                cursor-pointer select-none outline-none
-                ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
-                  <span className="relative z-10">Generar</span>
-             </button>
-          </div>
-       </div>
+          <button
+            onClick={onEjecutar}
+            disabled={loading}
+            className={`
+              relative p-3 font-bold uppercase text-xs tracking-[0.2em]
+              border-2 border-slate-400 border-dashed text-slate-400 
+              transition-all duration-200 ease-out transform origin-center select-none outline-none
+              pointer-events-auto
+              sm:hover:not-active:-translate-y-1
+              sm:hover:not-active:rotate-[-5deg] sm:hover:not-active:scale-130 sm:hover:not-active:border-slate-500 sm:hover:not-active:text-slate-500
+              sm:hover:not-active:shadow-lg
+              active:scale-110
+              active:-rotate-5
+              active:translate-y-1 
+              active:border-emerald-600 
+              active:text-emerald-600 
+              active:bg-emerald-50/50
+              cursor-pointer select-none outline-none
+              disabled cursor-not-allowed disabled:opacity-50 disabled:pointer-events-none disabled:transform-none
+            `}
+          >
+            <span className="relative z-10">Generar</span>
+          </button>
+        </div>
       </div>
+     </div>
     </section>
   );
 };

@@ -18,7 +18,7 @@ export const Conclusion: React.FC<ConclusionProps> = () => {
             <div className="grid grid-cols-2 gap-12 items-stretch">
 
               <div className="flex flex-col justify-end">
-                <div className="space-y-6">
+                <div className="flex flex-col h-full space-y-6">
                   <div className="stamp-box h-32 w-full flex flex-col items-center justify-center p-4">
                     <span className="font-sans text-[8px] text-center uppercase tracking-[0.5em] font-black text-slate-500 mb-4">Certificación estadística</span>
                     <div className="h-12 w-12 border-2 border-slate-300 rounded-full flex items-center justify-center">
@@ -32,7 +32,7 @@ export const Conclusion: React.FC<ConclusionProps> = () => {
               </div>
 
               <div className="flex flex-col justify-end">
-                <div className="space-y-6">
+                <div className="flex flex-col h-full space-y-6">
                   <div className="stamp-box h-32 w-full flex flex-col items-center justify-center p-4">
                     <span className="font-sans text-[8px] text-center uppercase tracking-[0.5em] font-black text-slate-500 mb-4">Autorizacion académica</span>
                     <div className="h-12 w-24 border border-dashed border-slate-400 flex items-center justify-center">

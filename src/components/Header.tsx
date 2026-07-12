@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
           <div className="animate-header flex flex-wrap justify-start sm:justify-center gap-x-8 gap-y-4 font-sans text-xs uppercase font-semibold text-slate-700 mb-8">
             <span className="flex items-start text-start sm:text-center sm:items-center gap-2"><IconId size={16} /> Autores: Stephania Dos Santos, Saúl Ramos</span>
             <span className="flex items-start sm:items-center gap-2"><IconBuildingCommunity size={16} /> Dpto. Informática y Estadística.</span>
-            <span className="flex items-start sm:items-center gap-2"><IconCalendarEvent size={16} /> Presentado: Julio, 2026</span>
+            <span className="flex items-start sm:items-center gap-2"><IconCalendarEvent size={16} /> Presentado: 14 de Julio del 2026</span>
           </div>
 
           <div className="animate-header h-[1px] bg-black w-full mb-2"></div>

@@ -46,20 +46,20 @@ export function Pruebas( {resultados}: Pruebas) {
       </div>
 
       <div className='overflow-x-auto'>
-        <table className="w-full latex-table">
+        <table className="w-full latex-table border-separate border-spacing-y-2">
           <thead className='bg-slate-50'>
             <tr data-kid="86">
-              <th data-kid="87">Método de Prueba</th>
-              <th data-kid="88">Valor Estadístico</th>
-              <th data-kid="89">Valor Crítico</th>
+              <th className=" w-1/4 text-left pb-2">Método de Prueba</th>
+              <th className="w-1/4 text-left pb-2">Valor Estadístico</th>
+              <th className="w-1/4 text-left pb-2">Valor Crítico</th>
             </tr>
           </thead>
           <tbody data-kid="91">
             {tablaData.map((f, index) => (
               <tr key= {index} data-kid="92">
-                <td data-kid="93">{f.metodo}</td>
-                <td className="mono" data-kid="94">{f.ec}</td>
-                <td className="mono" data-kid="95">{f.vc}</td>
+                <td className="py-2 px-4 border-b border-slate-200 mono" data-kid="93">{f.metodo}</td>
+                <td className="py-2 px-4 border-b border-slate-200 mono" data-kid="94">{f.ec}</td>
+                <td className="py-2 px-4 border-b border-slate-200 mono" data-kid="95">{f.vc}</td>
               </tr>
             ))}
           </tbody>
