@@ -26,7 +26,7 @@ export interface MediosCuadradosParams extends BaseParams{
   metodo:'medios_cuadrados'; 
   parametros: {
     seed: number; 
-    digito: number; 
+    d: number; 
   } 
 }
 
@@ -67,7 +67,7 @@ export interface MediaTest{
   rechazar_H0: boolean;
   interpretacion: string; 
   grados_libertad: number | null; 
-  desviacion_estandar_muestraL: number; 
+  desviacion_estandar_muestral: number; 
   error_estandar_media: number; 
   media_esperada_H0: number; 
 }
