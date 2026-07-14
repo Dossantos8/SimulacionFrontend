@@ -89,7 +89,7 @@ export default function App(): React.JSX.Element {
       metodo: 'medios_cuadrados',
       parametros: {
         seed: Number(seed) || 1234,
-        digito: Number(digitos) || 4
+        d: Number(digitos) || 4
       }
     };
   }
