@@ -147,7 +147,7 @@ export default function App(): React.JSX.Element {
       let rawValue = 0;
 
       if (metodo === 'Congruencial Multiplicativo') {
-        rawValue = Math.round(norm * modNum);
+        rawValue = Math.round(norm * (modNum - 1));
       } else if (metodo === 'Medios Cuadrados') {
         rawValue = Math.round(norm * Math.pow(10, digNum));
       }
