@@ -1,5 +1,5 @@
 import type { FilaMuestra } from '../Types/Simulacion';
-import React, { useState } from 'react'; 
+import React, { useState, useRef, useEffect } from 'react'; 
 
 interface TablaLedgerProps {
     tabla: FilaMuestra[];
@@ -10,9 +10,25 @@ interface TablaLedgerProps {
 export const TablaLedger: React.FC<TablaLedgerProps> = ({ tabla}) => {
 
   const [esPantallaCompleta, setEsPantallaCompleta] = useState(false);
-
+  
   const [paginaActual, setPaginaActual] = useState(1);
   const [itemsPorPagina, setItemsPorPagina] = useState(50); // Muestra 50 por defecto
+
+  const tablaRef = useRef<HTMLDivElement>(null);
+
+  const scrollPrevioRef = useRef<number>(0);
+
+  useEffect(() => {
+  if (esPantallaCompleta) {
+
+    scrollPrevioRef.current = window.scrollY;
+    tablaRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    window.scrollTo(0, 0);
+  } else {
+    window.scrollTo(0, scrollPrevioRef.current);
+  }
+}, [esPantallaCompleta]);
+
 
   const totalPaginas = Math.ceil(tabla.length / itemsPorPagina);
   const indiceUltimoItem = paginaActual * itemsPorPagina;
@@ -58,7 +74,7 @@ export const TablaLedger: React.FC<TablaLedgerProps> = ({ tabla}) => {
             </div>
           
 
-            <div className={`overflow-x-auto border-b border-slate-200 ${esPantallaCompleta ? 'flex-1 overflow-y-auto relative min-h-0' : 'max-h-[400px] overflow-y-auto'}`}>
+            <div ref={tablaRef} className={`overflow-x-auto border-b border-slate-200 ${esPantallaCompleta ? 'flex-1 overflow-y-auto relative min-h-0' : 'max-h-[400px] overflow-y-auto'}`}>
               <table className="w-full table-fixed latex-table border-separate border-spacing-y-2">
                 <thead className="bg-slate-50 sticky top-0 z-10">
                   <tr>

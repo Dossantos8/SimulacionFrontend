@@ -32,7 +32,7 @@ export const GraficosResultados: React.FC<GraficosResultadosProps> = ({ datosHis
         </div>
 
         <div className="shadow-md border border-slate-200 p-4 bg-white rounded-sm">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-4">Fig II. Comportamiento Estocástico Lineal (Primeras 30 r)</p>
+          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-4">Fig II. Comportamiento Estocástico Lineal (Primeras 20 r)</p>
           <div className="h-[220px] w-full">
             <Line
               data={datosLineas}
