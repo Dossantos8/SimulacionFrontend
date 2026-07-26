@@ -78,6 +78,23 @@ select.underlined-input {
   background-position: right center;
 }
 
+optgroup {
+  font-weight: 600; /* Le bajamos la intensidad a la negrita nativa */
+  font-style: italic; /* Puedes cambiarlo a italic si te gusta más */
+  color: #515b69; /* text-slate-500 de Tailwind para que no sea negro chillón */
+  font-size: 0.8rem; /* Un poco más pequeño para que parezca etiqueta */
+  background-color: #f8fafc; /* Un fondito sutil */
+}
+
+/* Asegurarnos de que las opciones hijas mantengan el texto oscuro y normal */
+optgroup option {
+  color: #0f172a; /* text-slate-900 */
+  font-weight: 500;
+  font-style: normal;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+}
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }

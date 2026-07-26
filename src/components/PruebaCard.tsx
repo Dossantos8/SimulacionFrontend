@@ -7,11 +7,11 @@ interface FilaDatos {
 }
 
 interface Props {
-  estado: string;
   nombre: string;
+  rechazada: boolean;
   FilaDatos: FilaDatos[];
 }
-export function PruebaCard({ estado, nombre, FilaDatos }: Props) {
+export function PruebaCard({ rechazada, nombre, FilaDatos }: Props) {
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
@@ -27,9 +27,7 @@ export function PruebaCard({ estado, nombre, FilaDatos }: Props) {
     return () => window.removeEventListener('resize', revisarPantalla);
   }, []);
 
-  const esAprobada = estado.toLowerCase() === "aprobada";
-
-  const estadoColor = esAprobada ? "text-emerald-500" : "text-red-500";
+  const estadoColor = !rechazada ? "text-emerald-500" : "text-red-500";
 
   return (
     <div className="shadow-md border border-slate-300 space-y-2 p-4 text-center">
@@ -37,7 +35,7 @@ export function PruebaCard({ estado, nombre, FilaDatos }: Props) {
       <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-2">
         <div className="mt-2 font-bold text-sm">{nombre}</div>
         <span className={`text-xs font-bold flex items-center justify-center shrink-0 ${estadoColor} ${!isMobile ? 'border-2 py-1 px-2' : ''}`}>
-            {isMobile ? (esAprobada ? <CircleCheck /> : <CircleX />) : estado} 
+            {isMobile ? (!rechazada ? <CircleCheck /> : <CircleX />) : !rechazada ? "Aprobada" : "Rechazada"} 
         </span>
 
       </div>

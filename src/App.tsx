@@ -11,157 +11,156 @@ import {
   PointElement,
   Tooltip
 } from 'chart.js';
-import type { ChartData } from 'chart.js'
 
+/* Componentes Locales */
 import { Header } from './components/Header';
-import { AbstractParams } from './components/Parametros';
+import { Formulario } from './components/Parametros';
 import { GraficosResultados } from './components/GraficosResultados';
 import { Pruebas } from './components/Pruebas';
 import { TablaLedger } from './components/TablaLedger';
 import { Conclusion } from './components/Conclusion';
-import type { SimulacionParams, FilaMuestra } from './Types/Simulacion';
+import { Footer } from './components/Footer';
+import { SkeletonLoader } from './components/SkeletonLoader';
+
+/* Types y Hooks */
+import type { ParametrosSimulacion, FilaMuestra } from './Types/Simulacion';
 import { useSimulacion } from './hooks/useSimulacion';
+
+/* Utils */
+import { descargarCSV } from './utils/exportaciones';
 
 // Registrar plugins de GSAP y componentes de Chart.js
 gsap.registerPlugin(ScrollTrigger);
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Tooltip);
 
+const MAPEO_METODOS: Record<string, string> = {
+  'Congruencial': 'congruencial',
+  'Medios Cuadrados': 'medios_cuadrados',
+};
+const MAPEO_DISTRIBUCIONES: Record<string, string> = {
+  'Uniforme': 'uniforme',
+  'Exponencial': 'exponencial',
+  'Normal': 'normal',
+  'Erlang': 'erlang',
+  'Bernoulli': 'bernoulli',
+  'Binomial': 'binomial',
+  'Poisson': 'poisson'
+};
+
+const obtenerParametrosMetodo = (metodo: string, params: any) => {
+  const constructores: Record<string, any> = {
+    'congruencial': {
+      mult: params.multiplier,
+      seed: params.seed,
+      mod: params.modulo,
+      // Se inyecta aditivo solo si no es 0 para usar el Mixto
+      ...(params.aditivo !== 0 ? { aditivo: params.aditivo } : {})
+    },
+    'medios_cuadrados': {
+      seed: params.seed,
+      d: params.digitos
+    }
+  };
+  return constructores[metodo] || {};
+};
+
+const obtenerParametrosDistribucion = (distribucion: string, params: any) => {
+  const constructores: Record<string, any> = {
+    'uniforme': { a: params.a, b: params.b },
+    'exponencial': { lam: params.lam },
+    'normal': { mu: params.mu, sigma: params.sigma },
+    'erlang': { k: params.k, lam: params.lam },
+    'bernoulli': { p: params.p },
+    'binomial': { n_ensayos: params.n_ensayos, p: params.p },
+    'poisson': { lam: params.lam }
+  };
+  return constructores[distribucion] || {};
+};
 
 export default function App(): React.JSX.Element {
 
-  // Tipado correcto para las referencias de animaciones GSAP
+  // Referencias de animaciones GSAP
   const mainDocRef = useRef<HTMLDivElement | null>(null);
   const headerAnimateRef = useRef<(HTMLDivElement | null)[]>([]);
   const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Estados para los parámetros de generación
-  const [metodo, setMetodo] = useState<string>('Congruencial Multiplicativo');
-  const [distribucion, setDistribucion] = useState<string>('Uniforme');
-  const [seed, setSeed] = useState<string>('16807');
-  const [multiplier, setMultiplier] = useState<string>('48271');
-  const [modulo, setModulo] = useState<string>('2147483647');
-  const [sampleSize, setSampleSize] = useState<string>('1000');
-  const [digitos, setDigitos] = useState<string>('4');
+  // States: Formulario
+  const FormularioInitialState: ParametrosSimulacion = {
+    metodo: 'Congruencial',
+    distribucion: 'Uniforme',
+    n: 100,
+    alpha: 0.05,
+    parametros: {
+      seed: 16807,
+      multiplier: 48271,
+      modulo: 2147483647,
+      aditivo: 0,
+      digitos: 4,
+      a: 0.0, b: 1.0, 
+      lam: 2.5, 
+      mu: 0.0, sigma: 1.0, 
+      k: 3, 
+      p: 0.5, 
+      n_ensayos: 10
+    }
+  };
+  const [formulario, setFormulario] = useState<ParametrosSimulacion>(FormularioInitialState);
 
+  // States: datos procesados
+  const [tablaDatos, setTablaDatos] = useState<FilaMuestra[]>([]);
+
+  // Array de resultados
   const { resultados, ejecutarSimulacion, loading } = useSimulacion();
 
-  // Estados de datos procesados 
-  const [tablaDatos, setTablaDatos] = useState<FilaMuestra[]>([]);
-  const [histogramData, setHistogramData] = useState<ChartData<'bar'>>({ labels: [], datasets: [] });
-  const [lineData, setLineData] = useState<ChartData<'line'>>({ labels: [], datasets: [] });
+  const simulacionGenerada = resultados !== null && !loading;
 
-  useEffect(() => {
-    if (metodo === 'Medios Cuadrados') {
-      setSeed('3708'); // Semilla de 4 dígitos ideal para pruebas
-    } else {
-      setSeed('16807'); 
-    }
-  }, [metodo]);
-
-  const ejecutarProtocolo = async(e?: MouseEvent<HTMLButtonElement>): Promise<void> => {
+  const ejecutarProtocolo = async (e?: MouseEvent<HTMLButtonElement>): Promise<void> => {
     if (e) e.preventDefault();
 
-    const esCongruencial = metodo === 'Congruencial Multiplicativo';
+    const metodoBackend = MAPEO_METODOS[formulario.metodo!];
+    const distribucionBackend = MAPEO_DISTRIBUCIONES[formulario.distribucion];
+    if (!metodoBackend) return;
 
-  const ContenidoBase = {
-    distribucion: distribucion.toLowerCase(), 
-    n: Number(sampleSize) || 100,
-    a: 0,
-    b: 1,
-    alpha: 0.05,
-  };
-
-  let contenido: SimulacionParams;
-
-  if (esCongruencial) {
-    contenido = {
-      ...ContenidoBase,
-      metodo: 'congruencial',
+    const payload: ParametrosSimulacion = {
+      metodo: metodoBackend,
+      distribucion: distribucionBackend,
+      n: formulario.n,
+      alpha: formulario.alpha,
       parametros: {
-        mult: Number(multiplier) || 16807,
-        seed: Number(seed) || 1234,
-        mod: Number(modulo) || 2147483647
+        ...obtenerParametrosMetodo(metodoBackend, formulario.parametros),
+        ...obtenerParametrosDistribucion(distribucionBackend, formulario.parametros)
       }
     };
-  } else {
-    contenido = {
-      ...ContenidoBase,
-      metodo: 'medios_cuadrados',
-      parametros: {
-        seed: Number(seed) || 1234,
-        d: Number(digitos) || 4
-      }
-    };
-  }
-  
-    await ejecutarSimulacion(contenido); 
+    
+    await ejecutarSimulacion(payload);
   };
 
+  //  Super Hardcodeado esto, habria que pasarlo a otro componente
+  //  De paso quitar el useEffect, para que queremos actualizar el histograma si los datos vienen del backend?  
   useEffect(() => {
-    if (resultados && resultados.data) {
-      const normas = resultados.data;
-      const n = normas.length;
-
-      const modNum = parseInt(modulo) || 1; 
-      const digNum = parseInt(digitos) || 4;
+    if (resultados && resultados.x && resultados.u) {
+      const muestrasX = resultados.x; // Datos de la distribución
+      const muestrasU = resultados.u; // Base (0,1)
 
       const conteos = [0, 0, 0, 0, 0];
-      normas.forEach((v: number) => {
-        if (v < 0.2) conteos[0]++; 
+      muestrasX.forEach((v: number) => {
+        if (v < 0.2) conteos[0]++;
         else if (v < 0.4) conteos[1]++;
-        else if (v < 0.6) conteos[2]++; 
-        else if (v < 0.8) conteos[3]++; 
+        else if (v < 0.6) conteos[2]++;
+        else if (v < 0.8) conteos[3]++;
         else conteos[4]++;
       });
 
-      setHistogramData({
-        labels: ['0.0-0.2', '0.2-0.4', '0.4-0.6', '0.6-0.8', '0.8-1.0'],
-        datasets: [{
-          label: 'Frecuencia',
-          data: conteos,
-          backgroundColor: '#1E293B',
-          borderColor: '#000000',
-          borderWidth: 1,
-          barPercentage: 0.9,
-          categoryPercentage: 0.9,
-        }]
-      });
-
-      const iteracionesLinea = Math.min(n, 20);
-      setLineData({
-        labels: Array.from({ length: iteracionesLinea }, (_, i) => i + 1),
-        datasets: [{
-          label: 'Valor Normalizado',
-          data: normas.slice(0, iteracionesLinea),
-          borderColor: '#000000',
-          borderWidth: 1.5,
-          pointBackgroundColor: '#FFFFFF',
-          pointBorderColor: '#1E293B',
-          pointRadius: 3,
-          pointHoverRadius: 5,
-          tension: 0,
-        }]
-      });
-
-    const nuevasFilas: FilaMuestra[] = resultados.data.map((norm: number, index: number) => {
-      let rawValue = 0;
-
-      if (metodo === 'Congruencial Multiplicativo') {
-        rawValue = Math.round(norm * (modNum - 1));
-      } else if (metodo === 'Medios Cuadrados') {
-        rawValue = Math.round(norm * Math.pow(10, digNum));
-      }
-
-      return {
+      const nuevasFilas: FilaMuestra[] = muestrasX.map((valX: number, index: number) => ({
         id: String(index + 1).padStart(4, '0'),
-        raw: rawValue,          
-        norm: norm.toFixed(6), 
-      };
-    });
+        // Si es distribución discreta (entero) mostramos sin decimales, si es continua, 4 decimales
+        x: Number.isInteger(valX) ? valX : valX.toFixed(4), 
+        u: muestrasU[index].toFixed(4),
+      }));
 
-    setTablaDatos(nuevasFilas);
-  }
-}, [resultados, metodo, modulo, digitos]); 
+      setTablaDatos(nuevasFilas);
+    }
+  }, [resultados, formulario.metodo, formulario.parametros.modulo, formulario.parametros.digitos]);
 
   // Ciclo de vida y animaciones usando gsap.context() para evitar memory leaks
   useEffect(() => {
@@ -208,34 +207,6 @@ export default function App(): React.JSX.Element {
     return () => ctx.revert();
   }, []);
 
-  const simulacionGenerada = resultados !== null && !loading;
-  
-  const descargarPDF = () => {
-    window.print();
-  };
-
-  const descargarCSV = () => {
-    if (tablaDatos.length === 0) return;
-
-    let csvContent = "sep=;\n";
-    
-    csvContent += "Indice;Salida Cruda (Xi);Valor Normalizado (Ri)\n";
-
-    tablaDatos.forEach(row => {
-      csvContent += `${row.id};${row.raw};${row.norm}\n`;
-    });
-
-    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `Simulacion_${metodo.replace(/\s+/g, '_')}_n${sampleSize}.csv`);
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   return (
     <div className="min-h-screen sm:p-4">
@@ -249,61 +220,35 @@ export default function App(): React.JSX.Element {
           <p className="font-mono text-[10px] uppercase tracking-[0.3em]">Documento de carácter educativo.</p>
         </div>
 
-        {/* Header */}
         <Header />
 
         <main className="space-y-20">
 
-          {/* 2. Abstract e Inputs */}
-          <AbstractParams
-            metodo={metodo} setMetodo={setMetodo} seed={seed} setSeed={setSeed}
-            distribucion={distribucion} setDistribucion={setDistribucion}
-            multiplier={multiplier} setMultiplier={setMultiplier} modulo={modulo} setModulo={setModulo}
-            sampleSize={sampleSize} setSampleSize={setSampleSize} digitos={digitos} setDigitos={setDigitos}
+          {/* 2. Formulario */}
+          <Formulario
             loading={loading}
             onEjecutar={ejecutarProtocolo}
+            formulario={formulario}
+            setFormulario={setFormulario}
           />
 
-          {simulacionGenerada && (
+          {loading ? (
+             <SkeletonLoader /> 
+          ) : simulacionGenerada ? (
             <>
               {/* Sección II: Gráficos Reactivos */}
-              <GraficosResultados datosHistograma={histogramData} datosLineas={lineData} />
-
+              <GraficosResultados muestras={resultados.x} />
               {/* III: Pruebas */}
               <Pruebas resultados={resultados} />
-
               {/* Sección IV: Tabla Ledger Dinámica */}
-              <TablaLedger tabla={tablaDatos} verTodasFilas={false} setVerTodasFilas={() => {}} />
-
+              <TablaLedger tabla={tablaDatos} verTodasFilas={false} setVerTodasFilas={() => { }} />
               {/* Sección V: Conclusión & Firmas de Autorización */}
-              <Conclusion totalMuestras={parseInt(sampleSize)} />
+              <Conclusion totalMuestras={formulario.n} />
             </>
-          )}
+          ) : null}
         </main>
 
-        {/* Footer */}
-        <footer className="mt-24 pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex gap-4">
-            {simulacionGenerada && (
-              <>
-                <button 
-                  onClick={descargarPDF} 
-                  className="font-sans text-[10px] uppercase font-black hover:text-slate-500 transition-colors cursor-pointer"
-                >
-                  Descargar PDF
-                </button>
-                <button 
-                  onClick={descargarCSV} 
-                  className="font-sans text-[10px] uppercase font-black hover:text-slate-500 transition-colors cursor-pointer"
-                >
-                  Exportar datos crudos (.CSV)
-                </button>
-              </>
-            )}
-
-          </div>
-          <p className="font-sans text-[10px] uppercase font-black opacity-30 text-center">© 2026 Laboratorio de Simulación Estocástica | All Rights Reserved</p>
-        </footer>
+        <Footer simulacionGenerada={simulacionGenerada} descargarCSV={() => descargarCSV(tablaDatos, formulario.metodo!, formulario.n)} />
 
       </div>
     </div>

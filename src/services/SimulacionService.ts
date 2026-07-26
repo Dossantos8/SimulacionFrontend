@@ -1,10 +1,9 @@
-import type { SimulacionParams, SimulacionResults } from "../Types/Simulacion";
+import type { ParametrosSimulacion, ResultadoSimulacion } from "../Types/Simulacion";
 
 const API_URL= import.meta.env.VITE_API_URL; 
 
-export const generarMuestras = async (datos: SimulacionParams): Promise<SimulacionResults> => {
+export const generarMuestras = async (datos: ParametrosSimulacion): Promise<ResultadoSimulacion> => {
   const endpoint = `${API_URL}/muestras/generar`;
-
   const respuesta = await fetch(endpoint, {
     method: 'POST',
     headers: {

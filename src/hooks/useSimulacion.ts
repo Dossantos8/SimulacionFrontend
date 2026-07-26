@@ -1,13 +1,13 @@
-import type { SimulacionParams, SimulacionResults } from "../Types/Simulacion";
+import type { ParametrosSimulacion, ResultadoSimulacion } from "../Types/Simulacion";
 import { generarMuestras } from "../services/SimulacionService";
 import { useState } from "react";
 
 export const useSimulacion = () => {
-  const [resultados, setResultados] = useState<SimulacionResults | null>(null);
+  const [resultados, setResultados] = useState<ResultadoSimulacion | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ejecutarSimulacion = async (parametros: SimulacionParams) => {
+  const ejecutarSimulacion = async (parametros: ParametrosSimulacion) => {
     setLoading(true);    
     setResultados(null);
     setError(null);      
